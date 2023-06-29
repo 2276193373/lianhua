@@ -5,7 +5,7 @@
         <img src="@/assets/img/guohui.png" alt="" class="guohui">
         <span class="header-left-title">“嘉”人“莲”心人大代表工作互动平台</span>
       </template>
-      <span v-else class="header-left-title">“嘉”人“莲”心</span>
+      <span v-else class="header-left-title">{{ store.headerTitle }}“嘉”人“莲”心</span>
     </div>
     <div class="header-right">
       <template v-if="isHome">
@@ -26,6 +26,7 @@
 import { computed, onBeforeMount, onBeforeUnmount, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router'
 import { getLunar } from 'chinese-lunar-calendar'
+import { store } from '@/store'
 
 const route = useRoute()
 const router = useRouter()
@@ -102,7 +103,7 @@ onBeforeUnmount(() => {
   box-shadow: 0 3px 18px rgba(0,0,0, .18);
   border-radius: 0 0 60px 60px;
   height: 110px;
-  width: 100vw;
+  width: 100%;
   box-sizing: border-box;
   font-size: 16px;
   &-left {

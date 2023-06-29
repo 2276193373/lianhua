@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@vitejs/plugin-legacy": "^4.0.5",
+    "axios": "^1.4.0",
     "chinese-lunar-calendar": "^1.0.1",
     "postcss-px-to-viewport": "^1.1.1",
     "sass": "^1.63.6",

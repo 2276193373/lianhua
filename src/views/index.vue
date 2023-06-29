@@ -15,10 +15,16 @@
   </div>
 </template>
 <script setup>
-import { reactive } from 'vue';
+import { onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router'
+import http from '@/request'
+import { store } from '@/store'
+
 const router = useRouter()
 
+onMounted(() => {
+  http.get('/jjj')
+})
 const list = reactive([
   { imgUrl: '/src/assets/img/home-1.png', text: '“嘉”仁“莲”心', name: 'jiaren' },
   { imgUrl: '/src/assets/img/home-2.png', text: '室站建设', name: 'shizhan' },
@@ -30,6 +36,7 @@ const list = reactive([
 ])
 
 function handleClick(item) {
+  store.setHeaderTitle('Hello World')
   router.push({ name: item.name })
 }
 </script>
