@@ -38,7 +38,32 @@ const routes = [
         path: 'shizhan/detail/:name',
         name: 'shizhanDetailInner',
         component: () => import('@/views/shizhan/detailInner.vue')
-      }
+      },
+      {
+        path: 'quan',
+        name: 'quan',
+        component: () => import('@/views/quan/index.vue')
+      },
+      {
+        path: 'zhongxin',
+        name: 'zhongxin',
+        component: () => import('@/views/zhongxin/index.vue')
+      },
+      {
+        path: 'pinpai',
+        name: 'pinpai',
+        component: () => import('@/views/pinpai/index.vue')
+      },
+      {
+        path: 'wojia',
+        name: 'wojia',
+        component: () => import('@/views/wojia/index.vue')
+      },
+      {
+        path: 'renda',
+        name: 'renda',
+        component: () => import('@/views/renda/index.vue')
+      },
     ]
   },
   

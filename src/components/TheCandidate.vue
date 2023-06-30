@@ -1,6 +1,6 @@
 <template>
   <div class="info-item pointer">
-    <img :src="props.imgUrl" alt="">
+    <img :src="baseUrl + props.imgUrl" alt="">
     <div class="info-area">
       <span class="info-area-name">{{ props.name }}</span>
       <span class="info-area-area">{{ props.area }}</span>
@@ -8,6 +8,7 @@
   </div>
 </template>
 <script setup>
+const baseUrl = import.meta.env.VITE_DOMAIN
 const props = defineProps({
   imgUrl: String,
   name: String,

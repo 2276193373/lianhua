@@ -1,19 +1,30 @@
 <template>
   <div>
-    <div class="title">人大代表联系群众活动室(站)-思明区嘉莲街道莲西社区</div>
+    <div class="title">人大代表联系群众活动室(站)-{{ route.query.street }}</div>
     <div class="item-wrapper">
-      <div v-for="item in 3" class="item pointer" @click="viewDetail(item)">
-        <img src="@/assets/tmp/touxiang.png">
-        <div class="item-text">“莲”心助力--人大代表风采</div>
+      <div v-for="item in data.list" class="item pointer" @click="viewDetail(item)">
+        <img :src="item.imgUrl">
+        <div class="item-text">{{ item.title }}</div>
       </div>
+      
     </div>
   </div>
 </template>
 <script setup>
-import { useRouter } from 'vue-router'
+import { reactive } from 'vue';
+import { useRouter, useRoute } from 'vue-router'
+
 const router = useRouter()
+const route = useRoute()
+const data = reactive({
+  list: [
+    { title: '“莲”心助力--人大代表风采', id: 1, imgUrl: '/src/assets/img/touxiang.png' },
+    { title: '人大工委档案', id: 2, imgUrl: '/src/assets/img/touxiang2.png' },
+    { title: '代表档案', id: 3, imgUrl: '/src/assets/img/touxiang3.png' },
+  ]
+})
 function viewDetail(item) {
-  router.push({ name: 'shizhanDetailInner', params: { name: '1' } })
+  router.push({ name: 'shizhanDetailInner', params: { name: item.id }, query: { ...route.query, streetTitle: item.title } })
 }
 </script>
 <style lang="scss" scoped>

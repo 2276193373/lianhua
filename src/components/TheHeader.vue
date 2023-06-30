@@ -5,7 +5,7 @@
         <img src="@/assets/img/guohui.png" alt="" class="guohui">
         <span class="header-left-title">“嘉”人“莲”心人大代表工作互动平台</span>
       </template>
-      <span v-else class="header-left-title">{{ store.headerTitle }}“嘉”人“莲”心</span>
+      <span v-else class="header-left-title">{{ store.headerTitle }}</span>
     </div>
     <div class="header-right">
       <template v-if="isHome">
@@ -24,7 +24,7 @@
 </template>
 <script setup>
 import { computed, onBeforeMount, onBeforeUnmount, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router'
+import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
 import { getLunar } from 'chinese-lunar-calendar'
 import { store } from '@/store'
 
@@ -47,9 +47,6 @@ const currentDate = computed(() => {
 
   const lunar = getLunar(year, month, date).dateStr
 
-  
-
-  
   return {
     curDate: formatdate,
     lunar
@@ -59,7 +56,14 @@ const currentDate = computed(() => {
 let intervalId
 let time = ref('')
 
+onBeforeRouteUpdate((to, from) => {
+  store.setHeaderTitle(to.query.title)
+  if (isHome) {
+    getTime()
+  }
+})
 onBeforeMount(() => {
+  store.setHeaderTitle(route.query.title)
   if (isHome) {
     getTime()
   }
@@ -88,10 +92,10 @@ function goBack() {
   console.log(1);
   router.go(-1)
 }
-onBeforeUnmount(() => {
-  console.log('unload', intervalId);
-  clearInterval(intervalId)
-})
+// onBeforeUnmount(() => {
+//   console.log('unload', intervalId);
+//   clearInterval(intervalId)
+// })
 </script>
 
 <style lang="scss" scoped>

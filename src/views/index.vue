@@ -1,15 +1,16 @@
 <template>
   <div>
-    <div class="title">党建引领真办实事 “六心六力”倾心为民</div>
+    <div class="title">{{ data.content }}</div>
     <div class="grid">
       <div
-        v-for="(item, index) in list"
+        v-for="(item, index) in data.list"
         :class="['home', 'home-'+ (index + 1)]"
         :key="index"
         @click="handleClick(item)"
       >
-        <img :src="item.imgUrl" alt="">
-        <span class="grid-text">{{ item.text }}</span>
+        <img :src="item.picUrl1" alt="" class="grid-item-bg">
+        <img :src="item.picUrl" alt="" class="grid-item-icon">
+        <span class="grid-text">{{ item.title }}</span>
       </div>
     </div>
   </div>
@@ -17,27 +18,39 @@
 <script setup>
 import { onMounted, reactive } from 'vue';
 import { useRouter } from 'vue-router'
-import http from '@/request'
+import http from '@/request/index.js'
 import { store } from '@/store'
 
 const router = useRouter()
 
 onMounted(() => {
-  http.get('/jjj')
+  http.get('home/index/home').then(res => {
+    data.list = res.typeList.map(item => {
+      item.picUrl = import.meta.env.VITE_DOMAIN + item.picUrl
+      item.picUrl1 = import.meta.env.VITE_DOMAIN + item.picUrl1
+      return item
+    })
+    data.content = res.content
+    store.setHeaderTitle(data.title)
+  })
 })
-const list = reactive([
-  { imgUrl: '/src/assets/img/home-1.png', text: '“嘉”仁“莲”心', name: 'jiaren' },
-  { imgUrl: '/src/assets/img/home-2.png', text: '室站建设', name: 'shizhan' },
-  { imgUrl: '/src/assets/img/home-3.png', text: '中心爱心' },
-  { imgUrl: '/src/assets/img/home-4.png', text: '我“嘉”风采' },
-  { imgUrl: '/src/assets/img/home-5.png', text: '全过程人民民主实践' },
-  { imgUrl: '/src/assets/img/home-6.png', text: '人大成果' },
-  { imgUrl: '/src/assets/img/home-7.png', text: '品牌打造' },
-])
+const id2RouteName = {
+    1: 'jiaren',
+    2: 'shizhan',
+    3: 'zhongxin',
+    4: 'wojia',
+    5: 'quan',
+    6: 'renda',
+    7: 'pinpai',
+  }
+const data = reactive({
+  list: [],
+  content: ''
+})
 
 function handleClick(item) {
-  store.setHeaderTitle('Hello World')
-  router.push({ name: item.name })
+  console.log(item.id, 'item.id');
+  router.push({ name: id2RouteName[item.id], query: { title: item.title } })
 }
 </script>
 <style lang="scss" scoped>
@@ -73,15 +86,27 @@ function handleClick(item) {
   .home {
     cursor: pointer;
     position: relative;
-    img {
+    .grid-item-bg {
       width: 100%;
       height: 100%;
+    }
+    .grid-item-icon {
+      position: absolute;
+      z-index: 1;
+      top: 52px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 154px;
+      height: 154px;
     }
   }
   .home-1 {
     grid-row: 1 / 3;
     .grid-text {
       top: 369px;
+    }
+    .grid-item-icon {
+      top: 183px;
     }
   }
   .home-4 {
