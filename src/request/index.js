@@ -40,6 +40,7 @@ function post(url, data) {
     data
   })
 }
+
 export default {
   get,
   post

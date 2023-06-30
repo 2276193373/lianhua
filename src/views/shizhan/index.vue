@@ -8,8 +8,8 @@
   </div>
 </template>
 <script setup>
-import { onMounted, reactive } from 'vue';
-import { useRouter } from 'vue-router'
+// import { onMounted, reactive } from 'vue';
+// import { useRouter } from 'vue-router'
 import http from "@/request";
 
 onMounted(() => {
@@ -22,7 +22,7 @@ const data = reactive({
 })
 
 function viewDetail(item) {
-  router.push({
+  item.id && router.push({
     name: 'shizhanDetail', 
     query: { title: '室站建设', street: item.title, id: item.id } 
   })
@@ -88,7 +88,7 @@ function getList() {
       font-size: 20px;
       color: #1D1D1D;
       font-weight: bold;
-      margin-top: 12px;
+      margin-top: 13px;
     }
   }
 }

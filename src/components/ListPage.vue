@@ -5,14 +5,14 @@
       <span class="nav-active">{{ props.navActiveText }}test--</span>
     </div>
     <div class="year-btn-wrapper">
-      <div class="year-btn pointer" @click.stop="clickYearBtn">
-        <span>全部年度</span>
+      <div class="year-btn pointer" @click.stop="clickYearBtn()">
+        <span>{{ data.selectedYear }}</span>
         <i class="right-triangle"></i>
       </div>
       <div v-show="!collapse" class="dropdown-list">
 
-        <div class="year" @click="clickYearBtn">全部年度</div>
-        <div v-for="item in 10" class="year" @click.stop="clickYearBtn">2022</div>
+        <div class="year" @click="clickYearBtn('全部年度')">全部年度</div>
+        <div v-for="item in rangeYear" class="year" @click.stop="clickYearBtn(item)">{{ item }}</div>
       </div>
     </div>
   </div>
@@ -20,7 +20,7 @@
   <div class="btn-group">
     <div
       v-for="item in btnGroup" 
-      :class="{ 'btn-item-active': data.curBtnItem === item.id }" 
+      :class="{ 'btn-item-active': data.curBtnItem === item.id }"
       class="btn-item flx-center" 
       @click="btnItemClick(item)"
     >
@@ -29,7 +29,7 @@
   </div>
   <!-- 列表 -->
   <div class="list-container">
-    <div v-for="item in 30" class="table-row">
+    <div v-for="item in data.list" class="table-row">
       <div class="table-row-1"><i class="red-right-triangle"></i>2022年第1期（总第1期）</div>
       <div class="table-row-2">2022</div>
       <div class="pointer table-row-btn" @click="view">查看</div>
@@ -38,7 +38,7 @@
   <div style="height: 40px;"></div>
 </template>
 <script setup>
-import { onUnmounted, reactive, ref } from 'vue';
+import http from '@/request'
 
 const props = defineProps({
   navText: String,
@@ -46,14 +46,28 @@ const props = defineProps({
   btnGroup: {
     type: Array,
     default: () => [{id: 1, title: 'hhhh'}, {id: 2, title: 'asdf'}]
-  }
+  },
+  url: String,
+  query: Object
 })
+
+onMounted(() => {
+  // http.get(props.url, props.query).then(res => {
+  //   console.log(res, 'res.......list-page');
+  // })
+})
+const rangeYear = getRangeYear()
 const collapse = ref(true)
 
 const data = reactive({
-  curBtnItem: 1
+  curBtnItem: 1,
+  selectedYear: '全部年度',
+  list: []
 })
-function clickYearBtn() {
+function clickYearBtn(item) {
+  if (item) {
+    data.selectedYear = item
+  }
   collapse.value = !collapse.value
 }
 function btnItemClick(item) {
@@ -61,6 +75,15 @@ function btnItemClick(item) {
 }
 function view() {
   console.log('view.....');
+}
+function getRangeYear(startYear = 2020, endYear = new Date().getFullYear()) {
+  const n = endYear - startYear
+  const list = [startYear]
+  for (let i = 1; i <= n; i++) {
+    list.push(startYear + i)
+  }
+  console.log(list,'1234');
+  return list
 }
 document.addEventListener('click', () =>{
   collapse.value = true

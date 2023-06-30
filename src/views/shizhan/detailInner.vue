@@ -19,11 +19,11 @@
   </template>
 </template>
 <script setup>
-import ListPage from "@/components/ListPage.vue";
-import { useRoute, useRouter } from 'vue-router'
+// import ListPage from "@/components/ListPage.vue";
+// import { useRoute, useRouter } from 'vue-router'
 import http from '@/request'
-import { onMounted, reactive } from 'vue';
-import TheCandidate from '@/components/TheCandidate.vue';
+// import { onMounted, reactive } from 'vue';
+// import TheCandidate from '@/components/TheCandidate.vue';
 const route = useRoute()
 const router = useRouter()
 

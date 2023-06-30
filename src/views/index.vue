@@ -16,10 +16,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, reactive } from 'vue';
-import { useRouter } from 'vue-router'
-import http from '@/request/index.js'
-import { store } from '@/store'
+import http from '@/request'
 
 const router = useRouter()
 

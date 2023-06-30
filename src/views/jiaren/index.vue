@@ -17,8 +17,6 @@
   
 </template>
 <script setup>
-import TheCandidate from '@/components/TheCandidate.vue';
-import Pagination from '@/components/Pagination.vue';
 import http from '@/request'
 import { store } from '@/store'
 import { onMounted, reactive } from 'vue';
