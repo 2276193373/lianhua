@@ -13,20 +13,14 @@
     @prevPage="handlePrevPage"
     @nextPage="handleNextPage"
   />
-
   
 </template>
 <script setup>
 import http from '@/request'
-// import { store } from '@/store'
-// import { onMounted, reactive } from 'vue';
-// import { useRouter } from 'vue-router'
 
 onMounted(() => {
   getList()
 })
-
-const router = useRouter()
 
 const data = reactive({
   list: [],
@@ -68,6 +62,4 @@ function handlePrevPage() {
   grid-template-columns: repeat(9, 180px);
   margin-top: 56px;
 }
-
-
 </style>

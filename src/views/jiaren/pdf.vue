@@ -9,6 +9,6 @@ const linkUrl = import.meta.env.VITE_DOMAIN + route.query.linkUrl
 <style scoped>
 .pdf {
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 120px);
 }
 </style>
