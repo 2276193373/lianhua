@@ -21,10 +21,10 @@
       </template>
     </div>
   </div>
+  <div class="header-height-bar"></div>
 </template>
 <script setup>
-import { computed, onBeforeMount, onBeforeUnmount, ref } from 'vue';
-import { onBeforeRouteUpdate, useRoute, useRouter } from 'vue-router'
+
 import { getLunar } from 'chinese-lunar-calendar'
 import { store } from '@/store'
 
@@ -32,6 +32,7 @@ const route = useRoute()
 const router = useRouter()
 
 const isHome = computed(() => {
+  store.setHeaderTitle(route.query.title)
   return route.name === 'home'
 })
 
@@ -53,15 +54,9 @@ const currentDate = computed(() => {
   }
 })
 
-let intervalId
 let time = ref('')
 
-onBeforeRouteUpdate((to, from) => {
-  store.setHeaderTitle(to.query.title)
-  if (isHome) {
-    getTime()
-  }
-})
+
 onBeforeMount(() => {
   store.setHeaderTitle(route.query.title)
   if (isHome) {
@@ -72,41 +67,40 @@ function getTime() {
     let hours = () => pad0(new Date().getHours())
     let minutes = () => pad0(new Date().getMinutes())
     time.value = `${hours()}:${minutes()}`
-    intervalId = setInterval(() => {
+    setInterval(() => {
       time.value = `${hours()}:${minutes()}`
       console.log(time.value, '当前时间');
     }, 60 * 1000);
 }
 function pad0(num) {
-  if (num < 10) {
-    return '0' + num
-  }
-  return num
+  return num < 10 ? '0' + num : num
 }
 function goHome() {
-  console.log(2);
-
   router.push({ name: 'home' })
 }
 function goBack() {
-  console.log(1);
   router.go(-1)
 }
-// onBeforeUnmount(() => {
-//   console.log('unload', intervalId);
-//   clearInterval(intervalId)
-// })
+
 </script>
 
 <style lang="scss" scoped>
+$navHeight: 110px;
+.header-height-bar {
+  height: $navHeight;
+}
 .header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99;
   padding: 0 60px;
   display: flex;
   justify-content: space-between;
   background: white;
   box-shadow: 0 3px 18px rgba(0,0,0, .18);
   border-radius: 0 0 60px 60px;
-  height: 110px;
+  height: $navHeight;
   width: 100%;
   box-sizing: border-box;
   font-size: 16px;
@@ -143,6 +137,7 @@ function goBack() {
       justify-content: center;
       align-items: center;
       margin-left: 36px;
+      user-select: none;
       cursor: pointer;
       img {
         margin-right: 12px;

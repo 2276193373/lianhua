@@ -2,25 +2,46 @@
   <div class="zhongxin">
     <div class="zhongxin-left">
       <img src="@/assets/img/zhongxin-1.png" class="zhongxing-img" alt="">
-      <span class="zhongxin-title">助力中心</span>
-      <div v-for="(item, index) in 4" class="babal-wrapper" :class="['babal-wrapper-'+(1+index)]">
+      <span class="zhongxin-title">{{ data.list1.title }}</span>
+      <div v-for="(item, index) in data.list1.son" :key="index" class="babal-wrapper pointer" :class="['babal-wrapper-'+(1+index)]" @click="handleClick(item, data.list1.title)">
         <img src="@/assets/img/babal.png" class="babal" alt="">
-        <div class="babal-text">{{ item }}</div>
+        <div class="babal-text">{{ item.title }}</div>
       </div>
     </div>
     <div class="zhongxin-right">
-      <span class="zhongxin-title zhongxin-title-right">爱心嘉莲</span>
+      <span class="zhongxin-title zhongxin-title-right">{{ data.list2.title }}</span>
       <img src="@/assets/img/zhongxin-2.png" class="zhongxing-img" alt="">
       <div class="grid">
-        <div v-for="(item, index) in 13" class="babal-wrapper-right">
+        <div v-for="(item, index) in data.list2.son" :key="index" class="babal-wrapper-right pointer" @click="handleClick(item, data.list2.title)">
           <img src="@/assets/img/babal.png" class="babal" alt="">
-          <div class="babal-text">{{ item }}</div>
+          <div class="babal-text">{{ item.title }}</div>
         </div>
       </div>
       
     </div>
   </div>
 </template>
+<script setup>
+import http from '@/request'
+const router = useRouter()
+const route = useRoute()
+
+onMounted(() => {
+  http.get('home/central/type_index').then(res => {
+    data.list1 = res.centralTypeList[0]
+    data.list2 = res.centralTypeList[1]
+  })
+})
+
+const data = reactive({
+  list1: [],
+  list2: []
+})
+
+function handleClick(item, title2) {
+  router.push({ name: 'zhongxinList', query: { ...route.query, id: item.id, title2: title2, navActiveText: item.title } })
+}
+</script>
 <style lang="scss" scoped>
 .zhongxin {
   display: flex;
@@ -63,7 +84,6 @@
   }
 }
 .babal-wrapper {
-  border: 1px solid red;
   position: absolute;
   left: 140px;
   top: 150px;
@@ -71,17 +91,20 @@
   
   .babal-text {
     position: absolute;
-    left: 50%;
+    // left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
-  }
-  &-1 {
-    top: 270px;
+    transform: translate(0, -50%);
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
   }
   &-2 {
-    top: 398px;
+    top: 270px;
   }
   &-3 {
+    top: 398px;
+  }
+  &-4 {
     top: 522px;
   }
   .babal {
@@ -93,7 +116,6 @@
   position: absolute;
   top: 150px;
   left: 0;
-  border: 1px solid red;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(4, 220px);
@@ -110,9 +132,12 @@
   }
   .babal-text {
     position: absolute;
-    left: 50%;
+    // left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translate(0, -50%);
+    width: 100%;
+    text-align: center;
+    font-size: 20px;
   }
 }
 </style>

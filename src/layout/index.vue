@@ -12,7 +12,8 @@
 .container {
   min-height: 100vh;
   background: #F0F6FB;
-  padding-bottom: 40px;
+  // padding-bottom: 40px;
+  // box-sizing: border-box;
 }
 .main {
   padding: 0 60px;

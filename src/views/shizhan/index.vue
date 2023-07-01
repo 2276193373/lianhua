@@ -22,9 +22,9 @@ const data = reactive({
 })
 
 function viewDetail(item) {
-  item.id && router.push({
+  router.push({
     name: 'shizhanDetail', 
-    query: { title: '室站建设', street: item.title, id: item.id } 
+    query: { title: '室站建设', street: item.title, id: item.id || 0 } 
   })
 }
 function getList() {

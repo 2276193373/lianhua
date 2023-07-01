@@ -1,13 +1,29 @@
 <template>
   <div class="quan">
-    <div v-for="item in 5" class="quan-item">
-      <img src="" alt="" class="quan-item-img">
-      <div class="quan-blur flx-center">hhhhh</div>
+    <div v-for="item in data.list" class="quan-item" @click="handleClick(item)">
+      <img :src="baseUrl + item.picUrl" alt="" class="quan-item-img">
+      <div class="quan-blur flx-center">{{ item.title }}</div>
     </div>
   </div>
 </template>
 <script setup>
+import http from '@/request'
 
+const router = useRouter()
+const route = useRoute()
+
+onMounted(() => {
+  http.get('home/practice/type_index').then(res => {
+    data.list = res.practiceTypeList
+  })
+})
+const baseUrl = import.meta.env.VITE_DOMAIN
+const data = reactive({
+  list: []
+})
+function handleClick(item) {
+  router.push({ name: 'quanList', query: { navActiveText: item.title, type: item.id, ...route.query } })
+}
 </script>
 <style lang="scss" scoped>
 .quan {
@@ -20,7 +36,6 @@
 .quan-item {
   width: 772px;
   height: 320px;
-  background: blue;
   position: relative;
   overflow: hidden;
   &:nth-child(n+3) {

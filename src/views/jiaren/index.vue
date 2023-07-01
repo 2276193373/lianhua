@@ -18,9 +18,9 @@
 </template>
 <script setup>
 import http from '@/request'
-import { store } from '@/store'
-import { onMounted, reactive } from 'vue';
-import { useRouter } from 'vue-router'
+// import { store } from '@/store'
+// import { onMounted, reactive } from 'vue';
+// import { useRouter } from 'vue-router'
 
 onMounted(() => {
   getList()
@@ -37,19 +37,27 @@ const data = reactive({
 
 function getList(query = data.query) {
   http.get('home/people/index', query).then(res => {
+    if (res.response.code == 500) {
+      return console.error('返回 code:500')
+    }
     data.list = res.response.peopleList
   })
 }
 function viewDetail(item) {
   console.log(item, '---');
-  router.push({ name: 'pdf' })
+  // router.push({ name: 'pdf' })
 }
 function handleNextPage() {
-  query.page++
+  if (data.list.length < 18) {
+    return console.warn('没有更多了')
+  }
+  data.query.page++
+  getList()
 }
 function handlePrevPage() {
-  if (query.page > 0) {
-    query.page--
+  if (data.query.page > 1) {
+    data.query.page--
+    getList()
   }
 }
 </script>

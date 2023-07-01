@@ -45,9 +45,19 @@ const routes = [
         component: () => import('@/views/quan/index.vue')
       },
       {
+        path: 'quan/list',
+        name: 'quanList',
+        component: () => import('@/views/quan/list.vue')
+      },
+      {
         path: 'zhongxin',
         name: 'zhongxin',
         component: () => import('@/views/zhongxin/index.vue')
+      },
+      {
+        path: 'zhongxin/list',
+        name: 'zhongxinList',
+        component: () => import('@/views/zhongxin/list.vue')
       },
       {
         path: 'pinpai',
@@ -55,14 +65,29 @@ const routes = [
         component: () => import('@/views/pinpai/index.vue')
       },
       {
+        path: 'pinpai/list',
+        name: 'pinpaiList',
+        component: () => import('@/views/pinpai/list.vue')
+      },
+      {
         path: 'wojia',
         name: 'wojia',
         component: () => import('@/views/wojia/index.vue')
       },
       {
+        path: 'wojia/list',
+        name: 'wojiaList',
+        component: () => import('@/views/wojia/list.vue')
+      },
+      {
         path: 'renda',
         name: 'renda',
         component: () => import('@/views/renda/index.vue')
+      },
+      {
+        path: 'renda/list',
+        name: 'rendaList',
+        component: () => import('@/views/renda/list.vue')
       },
     ]
   },

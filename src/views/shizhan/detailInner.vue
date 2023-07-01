@@ -1,7 +1,7 @@
 <template>
   <div v-if="route.params.name == 1" class="nav">
-    <span>室站建设 / {{ route.query.street }} / </span>
-    <span class="nav-active">{{ route.query.streetTitle }}</span>
+    <span>{{ data.navText }}</span>
+    <span class="nav-active">{{ data.navActiveText }}</span>
   </div>
   <template v-if="route.params.name == 1">
     <div class="list-wrapper">
@@ -10,12 +10,18 @@
         :imgUrl="item.picUrl"
         :name="item.title"
         :area="item.impression"
-        @click="viewDetail(item)"
       />
   </div>
   </template>
   <template v-else>
-    <ListPage />
+    <ListPage
+      :query="data.query"
+      :url="data.url"
+      :navText="data.navText"
+      :navActiveText="data.navActiveText"
+      :columns="[{ prop: 'title'}, { prop: 'year' }]"
+      :listProp="data.listProp"
+    />
   </template>
 </template>
 <script setup>
@@ -33,16 +39,27 @@ onMounted(() => {
     getList()
   }
   if (name == 2) {
-
+    data.url = 'home/committee/index'
+    data.listProp = 'committeeList'
+  }
+  if (name == 3) {
+    data.url = 'home/archives/index'
+    data.listProp = 'archivesList'
   }
 })
 
 const data = reactive({
   list: [],
+  // 人大工委档案和代表档案query参数
   query: {
-    page: 1,
-    street: route.query.id
-  }
+    street: route.query.id,
+    year: ''
+  },
+  // 人大工委档案(params.name: 2)和代表档案(params.name: 3)url
+  url: '',
+  listProp: '',
+  navText: `室站建设 / ${route.query.street} / `,
+  navActiveText: route.query.streetTitle
 })
 function getList(query = data.query) {
   http.get('home/people/index', query).then(res => {

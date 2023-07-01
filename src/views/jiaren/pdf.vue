@@ -1,6 +1,11 @@
 <template>
-  <embed src="/src/assets/tmp/HarryPotter.pdf" type="application/pdf" class="pdf"/>
+  <embed :src="linkUrl" type="application/pdf" class="pdf"/>
 </template>
+<script setup>
+const route = useRoute()
+
+const linkUrl = import.meta.env.VITE_DOMAIN + route.query.linkUrl
+</script>
 <style scoped>
 .pdf {
   width: 100%;

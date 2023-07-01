@@ -1,26 +1,26 @@
 <template>
   <div class="nav">
     <div>
-      <span>{{ props.navText }} test--</span>
-      <span class="nav-active">{{ props.navActiveText }}test--</span>
+      <span>{{ props.navText }} </span>
+      <span class="nav-active">{{ props.navActiveText }}</span>
     </div>
     <div class="year-btn-wrapper">
       <div class="year-btn pointer" @click.stop="clickYearBtn()">
-        <span>{{ data.selectedYear }}</span>
-        <i class="right-triangle"></i>
+        <span>{{ data.selectedYear || '全部年度' }}</span>
+        <i class="right-triangle" :style="{ transform: `rotate(${collapse ? 0 : '90deg'})` }"></i>
       </div>
       <div v-show="!collapse" class="dropdown-list">
 
-        <div class="year" @click="clickYearBtn('全部年度')">全部年度</div>
+        <div class="year" @click="clickYearBtn(null)">全部年度</div>
         <div v-for="item in rangeYear" class="year" @click.stop="clickYearBtn(item)">{{ item }}</div>
       </div>
     </div>
   </div>
   <!-- 按钮组 -->
-  <div class="btn-group">
+  <div v-if="props.btnGroup.length" class="btn-group">
     <div
       v-for="item in btnGroup" 
-      :class="{ 'btn-item-active': data.curBtnItem === item.id }"
+      :class="{ 'btn-item-active': data.curBtnItem == item.id }"
       class="btn-item flx-center" 
       @click="btnItemClick(item)"
     >
@@ -30,9 +30,11 @@
   <!-- 列表 -->
   <div class="list-container">
     <div v-for="item in data.list" class="table-row">
-      <div class="table-row-1"><i class="red-right-triangle"></i>2022年第1期（总第1期）</div>
-      <div class="table-row-2">2022</div>
-      <div class="pointer table-row-btn" @click="view">查看</div>
+      <div v-for="(col, index) in props.columns" :class="[{ 'table-row-1': index === 0 }, 'table-row-2']">
+        <i v-if="index === 0" class="red-right-triangle"></i>
+        {{ item[col.prop] }}
+      </div>
+      <div class="pointer table-row-btn" @click="view(item)">查看</div>
     </div>
   </div>
   <div style="height: 40px;"></div>
@@ -40,51 +42,67 @@
 <script setup>
 import http from '@/request'
 
+const router = useRouter()
+const route = useRoute()
+
 const props = defineProps({
   navText: String,
   navActiveText: String,
   btnGroup: {
     type: Array,
-    default: () => [{id: 1, title: 'hhhh'}, {id: 2, title: 'asdf'}]
+    default: () => [] // [{id: 1, title: 'hello world'}]
   },
   url: String,
-  query: Object
+  query: Object,
+  columns: {
+    type: Array,
+    default: () => []
+  },
+  listProp: String,
+})
+onMounted(() => {
+  nextTick(() => {
+    getList({ ...props.query  })
+  })
 })
 
-onMounted(() => {
-  // http.get(props.url, props.query).then(res => {
-  //   console.log(res, 'res.......list-page');
-  // })
-})
 const rangeYear = getRangeYear()
 const collapse = ref(true)
 
 const data = reactive({
-  curBtnItem: 1,
-  selectedYear: '全部年度',
+  curBtnItem: props.btnGroup[0]?.id,
+  selectedYear: '',
   list: []
 })
 function clickYearBtn(item) {
-  if (item) {
+  if (item || item === null) {
     data.selectedYear = item
+    getList()
   }
   collapse.value = !collapse.value
 }
+function getList(query = props.query) {
+  http.get(props.url, { ...query, year: data.selectedYear }).then(res => {
+    data.list = res[props.listProp]
+  })
+}
 function btnItemClick(item) {
   data.curBtnItem = item.id
+  props.query.type = item.id
+  getList()
 }
-function view() {
-  console.log('view.....');
+function view(item) {
+  router.push({ name: 'pdf', query: { linkUrl: item.linkUrl, ...route.query } })
 }
-function getRangeYear(startYear = 2020, endYear = new Date().getFullYear()) {
+function getRangeYear(startYear = 2022, endYear = new Date().getFullYear()) {
   const n = endYear - startYear
   const list = [startYear]
   for (let i = 1; i <= n; i++) {
     list.push(startYear + i)
   }
-  console.log(list,'1234');
-  return list
+  return list.reverse()
 }
+
 document.addEventListener('click', () =>{
   collapse.value = true
 })
@@ -137,6 +155,7 @@ document.addEventListener('click', () =>{
   max-height: 300px;
   overflow: auto;
   position: absolute;
+  z-index: 2;
   .year {
     color: #1D1D1D;
     cursor: pointer;
@@ -158,10 +177,14 @@ document.addEventListener('click', () =>{
   border-left: $w solid white;
   border-right: $w solid transparent;
   display: inline-block;
+  transform-origin: 0 50%;
+  transition: transform .2s;
 }
 .red-right-triangle {
   @extend .right-triangle;
   border-left-color: #CC0003;
+  position: relative;
+  top: -2px;
 }
 .list-container {
   $paddingLR: 60px;
@@ -169,24 +192,35 @@ document.addEventListener('click', () =>{
   background: white;
   // width: calc(100% + $paddingLR + $paddingLR);
   // margin-left: -$paddingLR;
-  padding: 0 60px;
   box-sizing: border-box;
   .table-row {
+    padding: 0 60px;
     height: 81px;
     display: flex;
     align-items: center;
     box-sizing: border-box;
-    border-bottom: 1px solid #CCD2DF;
+    // border-bottom: 1px solid #CCD2DF;
     font-size: 20px;
     color: #1D1D1D;
-    &:last-child {
+    position: relative;
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 60px);
+      border-bottom: 1px solid #CCD2DF;
+    }
+    &:last-child::after {
       border: 0;
     }
     &:hover {
       background: #CCD2DF1f;
     }
     &-1 {
-      flex: .6
+      flex: .6!important;
+      text-align: left!important;
     }
     &-2 {
       flex: .2;

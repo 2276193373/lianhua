@@ -1,14 +1,32 @@
 <template>
   <div class="renda">
-    <div v-for="item in 4" class="renda-item pointer">
-      <img src="" alt="" class="renda-img">
+    <div v-for="item in data.list" class="renda-item pointer" @click="handleClick(item)">
+      <img :src="baseUrl + item.picUrl1" alt="" class="renda-img">
       <div class="renda-overlay">
-        <img src="" alt="" class="renda-icon">
-        <div class="renda-text">{{ item }}</div>
+        <img :src="baseUrl + item.picUrl" alt="" class="renda-icon">
+        <div class="renda-text">{{ item.title }}</div>
       </div>
     </div>
   </div>
 </template>
+<script setup>
+import http from '@/request'
+const router = useRouter()
+const route = useRoute()
+
+onMounted(() => {
+  http.get('home/congress/type_index').then(res => {
+    data.list = res.congressTypeList
+  })
+})
+const baseUrl = import.meta.env.VITE_DOMAIN
+const data = reactive({
+  list: []
+})
+function handleClick(item) {
+  router.push({ name: 'rendaList', query: { navActiveText: item.title, id: item.id, ...route.query } })
+}
+</script>
 <style lang="scss" scoped>
 .renda {
   margin-top: 180px;
@@ -22,6 +40,9 @@
     &:hover {
       .renda-img {
         transform: scale(1.2);
+      }
+      .renda-overlay {
+        backdrop-filter: unset;
       }
     }
   }

@@ -14,13 +14,17 @@
 import { reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 
+import img1 from '@/assets/img/touxiang.png'
+import img2 from '@/assets/img/touxiang2.png'
+import img3 from '@/assets/img/touxiang3.png'
+
 const router = useRouter()
 const route = useRoute()
 const data = reactive({
   list: [
-    { title: '“莲”心助力--人大代表风采', id: 1, imgUrl: '/src/assets/img/touxiang.png' },
-    { title: '人大工委档案', id: 2, imgUrl: '/src/assets/img/touxiang2.png' },
-    { title: '代表档案', id: 3, imgUrl: '/src/assets/img/touxiang3.png' },
+    { title: '“莲”心助力--人大代表风采', id: 1, imgUrl: img1 },
+    { title: '人大工委档案', id: 2, imgUrl: img2 },
+    { title: '代表档案', id: 3, imgUrl: img3 },
   ]
 })
 function viewDetail(item) {

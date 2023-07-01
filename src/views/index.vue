@@ -72,7 +72,7 @@ function handleClick(item) {
   font-size: 44px;
   color: #363636;
   text-align: center;
-  margin-top: 70px;
+  margin-top: 50px;
   margin-bottom: 45px;
 }
 .grid {
