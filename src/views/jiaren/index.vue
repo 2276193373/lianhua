@@ -17,6 +17,8 @@
 </template>
 <script setup>
 import http from '@/request'
+const route = useRoute()
+const router = useRouter()
 
 onMounted(() => {
   getList()
@@ -37,9 +39,13 @@ function getList(query = data.query) {
     data.list = res.response.peopleList
   })
 }
-function viewDetail(item) {
-  console.log(item, '---');
-  // router.push({ name: 'pdf' })
+function viewDetail(item, type = 'richText') {
+  store.setRichTextContent(item.content)
+  router.push({
+    name: 'pdf',
+    params: { type },
+    query: { ...route.query }
+  })
 }
 function handleNextPage() {
   if (data.list.length < 18) {

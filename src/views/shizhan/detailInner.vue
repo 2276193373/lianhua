@@ -10,6 +10,7 @@
         :imgUrl="item.picUrl"
         :name="item.title"
         :area="item.impression"
+        @click="viewDetail(item)"
       />
   </div>
   </template>
@@ -28,6 +29,7 @@
 // import ListPage from "@/components/ListPage.vue";
 // import { useRoute, useRouter } from 'vue-router'
 import http from '@/request'
+import { store } from '@/store'
 // import { onMounted, reactive } from 'vue';
 // import TheCandidate from '@/components/TheCandidate.vue';
 const route = useRoute()
@@ -66,7 +68,28 @@ function getList(query = data.query) {
     data.list = res.response.peopleList
   })
 }
+function viewDetail(item, type = 'richText') {
+  let query = null
+  if (type === 'richText') {
+    query = route.query
+    store.setRichTextContent(item.content)
+    console.log(store.richTextContent, item.content, 'store.richTextContent');
+  } else if (type === 'pdf') {
+    query = { linkUrl: item.linkUrl, ...route.query }
+  }
+  
+  router.push({
+    name: 'pdf',
+    query,
+    params: { type }
+  })
 
+  // router.push({
+  //   name: 'pdf',
+  //   params: { type },
+  //   query: { ...route.query, linkUrl1: item.linkUrl1 }
+  // })
+}
 </script>
 <style lang="scss" scoped>
 .nav {

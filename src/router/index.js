@@ -20,7 +20,7 @@ const routes = [
         component: () => import('@/views/jiaren/index.vue')
       },
       {
-        path: 'jiaren/pdf',
+        path: 'jiaren/detail/:type', /* type: pdf | richText */
         name: 'pdf',
         component: () => import('@/views/jiaren/pdf.vue')
       },

@@ -34,13 +34,17 @@
         <i v-if="index === 0" class="red-right-triangle"></i>
         {{ item[col.prop] }}
       </div>
-      <div class="pointer table-row-btn" @click="view(item)">查看</div>
+      <div class="table-row-btn">
+        <div @click="view(item, 'pdf')">PDF文件</div>
+        <div @click="view(item, 'richText')">查看更多</div>
+      </div>
     </div>
   </div>
   <div style="height: 40px;"></div>
 </template>
 <script setup>
 import http from '@/request'
+import {store} from '@/store'
 
 const router = useRouter()
 const route = useRoute()
@@ -91,8 +95,21 @@ function btnItemClick(item) {
   props.query.type = item.id
   getList()
 }
-function view(item) {
-  router.push({ name: 'pdf', query: { linkUrl: item.linkUrl, ...route.query } })
+function view(item, type) {
+  let query = null
+  if (type === 'richText') {
+    query = route.query
+    store.setRichTextContent(item.content)
+    console.log(store.richTextContent, item.content, '1324444');
+  } else if (type === 'pdf') {
+    query = { linkUrl: item.linkUrl, ...route.query }
+  }
+  
+  router.push({
+    name: 'pdf',
+    query,
+    params: { type }
+  })
 }
 function getRangeYear(startYear = 2022, endYear = new Date().getFullYear()) {
   const n = endYear - startYear
@@ -231,6 +248,10 @@ document.addEventListener('click', () =>{
       text-align: right;
       color: #1954AB;
       margin-right: 30px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 14px;
+      cursor: pointer;
     }
   }
 }
