@@ -4,6 +4,7 @@ import vue from '@vitejs/plugin-vue'
 import pxtovw from 'postcss-px-to-viewport'
 import Components from  'unplugin-vue-components/vite'
 import AutoImport from 'unplugin-auto-import/vite'
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 const my_pxtovw = pxtovw({
   //这里是设计稿宽度 自己修改
@@ -28,11 +29,13 @@ export default defineConfig({
     vue(),
     Components({
       extensions: ['vue'],//文件扩展
-      dirs: ['src/components']
+      dirs: ['src/components'],
+      resolvers: [ElementPlusResolver()],
     }),
     AutoImport({
       imports: ['vue', 'vue-router'],
-      dirs: ['src/store']
+      dirs: ['src/store'],
+      resolvers: [ElementPlusResolver()],
     })
   ],
   resolve: {

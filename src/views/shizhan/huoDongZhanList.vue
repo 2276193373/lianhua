@@ -1,4 +1,5 @@
 <template>
+  <Breadcrumb v-bind="data.navObj" />
   <div class="shi-list">
     <div v-for="item in data.list" class="shi-list-item pointer" @click="viewDetail(item)">
         <img class="shi-img" src="@/assets/img/guohui.png" alt="">
@@ -8,23 +9,32 @@
   </div>
 </template>
 <script setup>
-// import { onMounted, reactive } from 'vue';
-// import { useRouter } from 'vue-router'
 import http from "@/request";
+
+const router = useRouter()
+const route = useRoute()
 
 onMounted(() => {
   getList()
 })
 
-const router = useRouter()
+
 const data = reactive({
   list: [],
+  navObj: {
+    navActiveText: route.query.navActiveText,
+    navText: route.query.title + ' / '
+  }
+  
 })
 
 function viewDetail(item) {
   router.push({
-    name: 'shizhanDetail', 
-    query: { title: '室站建设', street: item.title, id: item.id || 0 } 
+    name: 'shizhanDetailInner', 
+    query: { title: '室站建设', street: item.title, id: item.id || 0, ...route.query, navText: route.query.navActiveText, navActiveText: item.title },
+    params: {
+      name: 1
+    }
   })
 }
 function getList() {

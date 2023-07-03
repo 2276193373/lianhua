@@ -27,7 +27,17 @@ const routes = [
       {
         path: 'shizhan',
         name: 'shizhan',
-        component: () => import('@/views/shizhan/index.vue')
+        component: () => import('@/views/shizhan/newIndex.vue')
+      },
+      {
+        path: 'shizhan/huoDongZhanList',
+        name: 'shizhanHuoDongZhanList',
+        component: () => import('@/views/shizhan/huoDongZhanList.vue')
+      },
+      {
+        path: 'shizhan/huoDongShiList',
+        name: 'shizhanHuoDongShiList',
+        component: () => import('@/views/shizhan/huoDongShiList.vue')
       },
       {
         path: 'shizhan/detail',
@@ -39,6 +49,7 @@ const routes = [
         name: 'shizhanDetailInner',
         component: () => import('@/views/shizhan/detailInner.vue')
       },
+      
       {
         path: 'quan',
         name: 'quan',

@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div class="title">人大代表联系群众活动室(站)-{{ route.query.street }}</div>
+    <div class="title"></div>
     <div class="item-wrapper">
       <template v-for="(item, index) in resList">
-        <div class="item pointer" @click="viewDetail(item)" :class="[item.className]">
+        <div class="item pointer" @click="viewDetail(item, id)" :class="[item.className]">
           <img :src="item.imgUrl">
           <div class="item-text">{{ item.title }}</div>
         </div>
@@ -15,7 +15,7 @@
 import { reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router'
 
-// import img1 from '@/assets/img/touxiang.png'
+import img1 from '@/assets/img/touxiang.png'
 import img2 from '@/assets/img/touxiang2.png'
 import img3 from '@/assets/img/touxiang3.png'
 
@@ -24,9 +24,9 @@ const route = useRoute()
 
 const data = reactive({
   list: [
-    // { title: '“莲”心助力--人大代表风采', id: 1, imgUrl: img1, className: 'item-1' },
-    { title: '各社区人大代表联系群众活动站', id: 2, imgUrl: img2, className: 'item-2' },
-    { title: '代表档嘉莲街道人大代表联系群众活动室案', id: 3, imgUrl: img3, className: 'item-3' }
+    { title: '各选区人大代表联系群众活动站', id: 1, imgUrl: img1, className: '' },
+    { title: '嘉莲街道人大代表联系群众活动室', id: 2, imgUrl: img3, className: 'item-3' },
+    { title: '人大工委档案', id: 3, imgUrl: img2, className: 'item-2' },
   ]
 })
 const resList = computed(() => {
@@ -37,7 +37,14 @@ const resList = computed(() => {
   }
 })
 function viewDetail(item) {
-  router.push({ name: 'shizhanDetailInner', params: { name: item.id }, query: { ...route.query, streetTitle: item.title } })
+  if (item.id == 1) {
+    router.push({ name: 'shizhanHuoDongZhanList', query: { ...route.query, navActiveText: item.title } })
+  } else if (item.id == 2) {
+    router.push({ name: 'shizhanHuoDongShiList', query: { ...route.query, navActiveText: item.title } })
+  } else if (item.id == 3) {
+    router.push({ name: 'shizhanDetailInner', query: { ...route.query, navActiveText: item.title }, params: { name: item.id } })
+  }
+  // router.push({ name: 'shizhanDetailInner', params: { name: item.id }, query: { ...route.query, streetTitle: item.title } })
 }
 </script>
 <style lang="scss" scoped>
@@ -45,8 +52,8 @@ function viewDetail(item) {
   font-size: 44px;
   color: #111111;
   text-align: center;
-  margin-top: 131px;
-  margin-bottom: 105px;
+  margin-top: 200px;
+  // margin-bottom: 105px;
 }
 .item-wrapper {
   display: flex;

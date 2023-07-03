@@ -1,17 +1,17 @@
 <template>
-  <template v-if="fileType === 'pdf'">
-    <embed :src="linkUrl" type="application/pdf" class="pdf"/>
-  </template>
-  <div class="richtext-wrapper" v-else-if="fileType === 'richText'">
+  <div class="richtext-wrapper" :class="{ 'both-richtext': isBoth }" v-if="fileType === 'richText' || isBoth">
     <div v-html="richTextContent" class="richtext"></div>
   </div>
-  <template v-else>
-    <h4>路由params文件类型参数错误：{{ fileType }}</h4>
+  <template v-if="fileType === 'pdf' || isBoth">
+    <embed v-if="route.query.linkUrl" :src="linkUrl" type="application/pdf" class="pdf" :class="{ 'both-pdf': isBoth }" />
   </template>
+  
+  <!-- <template v-else>
+    <h4>路由params文件类型参数错误：{{ fileType }}</h4>
+  </template> -->
 </template>
 <script setup>
 import { store } from '@/store'
-import { onUnmounted } from 'vue';
 import { onBeforeRouteLeave } from 'vue-router';
 const route = useRoute()
 
@@ -29,6 +29,10 @@ onMounted(() => {
     })
   })
 })
+const isBoth = computed(() => {
+  return route.params.type === 'both'
+})
+
 onBeforeRouteLeave(() => {
   store.setRichTextContent('')
 })
@@ -39,12 +43,18 @@ onBeforeRouteLeave(() => {
   width: 100%;
   height: calc(100vh - 120px);
 }
-
+.both-pdf {
+  // width: 51%;
+}
 .richtext {
   width: 80%;
   margin: 40px auto 0;
   height: calc(100vh - 170px);
   overflow: auto;
+}
+.both-richtext {
+  // width: 49%;
+  display: inline-block;
 }
 </style>
 <style lang="scss">

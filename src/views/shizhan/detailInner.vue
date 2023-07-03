@@ -1,95 +1,48 @@
 <template>
-  <div v-if="route.params.name == 1" class="nav">
-    <span>{{ data.navText }}</span>
-    <span class="nav-active">{{ data.navActiveText }}</span>
-  </div>
-  <template v-if="route.params.name == 1">
-    <div class="list-wrapper">
-      <TheCandidate
-        v-for="item in data.list"
-        :imgUrl="item.picUrl"
-        :name="item.title"
-        :area="item.impression"
-        @click="viewDetail(item)"
-      />
-  </div>
-  </template>
-  <template v-else>
-    <ListPage
-      :query="data.query"
-      :url="data.url"
-      :navText="data.navText"
-      :navActiveText="data.navActiveText"
-      :columns="[{ prop: 'title'}, { prop: 'year' }]"
-      :listProp="data.listProp"
-    />
-  </template>
+  <ListPage
+    :query="data.query"
+    :url="data.url"
+    :navText="data.navText"
+    :navActiveText="data.navActiveText"
+    :columns="data.columns"
+    :listProp="data.listProp"
+  />
 </template>
 <script setup>
-// import ListPage from "@/components/ListPage.vue";
-// import { useRoute, useRouter } from 'vue-router'
-import http from '@/request'
-import { store } from '@/store'
-// import { onMounted, reactive } from 'vue';
-// import TheCandidate from '@/components/TheCandidate.vue';
 const route = useRoute()
-const router = useRouter()
 
 onMounted(() => {
+  // name: 1-活动站 2-活动室 3-人大工委档案
   const name = route.params.name
   if (name == 1) {
-    getList()
+    data.url = 'home/archives/index'
+    data.listProp = 'archivesList'
+    data.query.street = route.query.id
+
   }
   if (name == 2) {
+    data.url = 'home/shi/index'
+    data.listProp = 'shiList'
+    data.query.type = route.query.id
+    data.columns = [{ prop: 'title'}, { prop: 'sc_time' }]
+  }
+  if (name == 3) {
     data.url = 'home/committee/index'
     data.listProp = 'committeeList'
   }
-  if (name == 3) {
-    data.url = 'home/archives/index'
-    data.listProp = 'archivesList'
-  }
+  
 })
 
 const data = reactive({
   list: [],
-  // 人大工委档案和代表档案query参数
-  query: {
-    street: route.query.id,
-    year: ''
-  },
-  // 人大工委档案(params.name: 2)和代表档案(params.name: 3)url
+  query: {},
   url: '',
   listProp: '',
-  navText: `室站建设 / ${route.query.street} / `,
-  navActiveText: route.query.streetTitle
+  navText: `室站建设 / ${route.query.navText ? route.query.navText + ' / ' : ''}`,
+  navActiveText: route.query.navActiveText,
+  columns: [{ prop: 'title'}, { prop: 'year' }]
 })
-function getList(query = data.query) {
-  http.get('home/people/index', query).then(res => {
-    data.list = res.response.peopleList
-  })
-}
-function viewDetail(item, type = 'richText') {
-  let query = null
-  if (type === 'richText') {
-    query = route.query
-    store.setRichTextContent(item.content)
-    console.log(store.richTextContent, item.content, 'store.richTextContent');
-  } else if (type === 'pdf') {
-    query = { linkUrl: item.linkUrl, ...route.query }
-  }
-  
-  router.push({
-    name: 'pdf',
-    query,
-    params: { type }
-  })
 
-  // router.push({
-  //   name: 'pdf',
-  //   params: { type },
-  //   query: { ...route.query, linkUrl1: item.linkUrl1 }
-  // })
-}
 </script>
 <style lang="scss" scoped>
 .nav {

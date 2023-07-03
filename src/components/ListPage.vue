@@ -4,15 +4,22 @@
       <span>{{ props.navText }} </span>
       <span class="nav-active">{{ props.navActiveText }}</span>
     </div>
+    
     <div class="year-btn-wrapper">
-      <div class="year-btn pointer" @click.stop="clickYearBtn()">
-        <span>{{ data.selectedYear || '全部年度' }}</span>
+      <!-- <el-input v-model="data.title" class="input-title" placeholder="请搜索..." size="large" @input="handleInput" /> -->
+      <div class="flx-center">
+        <input v-model="data.localQuery.title" class="input-title" placeholder="搜索标题" @input="handleInput">
+        <img src="@/assets/img/search-icon.png" alt="" class="pointer" style="transform: translateX(-40px);" @click="handleInput">
+      </div>
+      <div>
+        <div class="year-btn pointer" @click.stop="clickYearBtn()">
+        <span>{{ data.localQuery.year || '全部年度' }}</span>
         <i class="right-triangle" :style="{ transform: `rotate(${collapse ? 0 : '90deg'})` }"></i>
       </div>
       <div v-show="!collapse" class="dropdown-list">
-
         <div class="year" @click="clickYearBtn(null)">全部年度</div>
         <div v-for="item in rangeYear" class="year" @click.stop="clickYearBtn(item)">{{ item }}</div>
+      </div>
       </div>
     </div>
   </div>
@@ -76,17 +83,37 @@ const collapse = ref(true)
 const data = reactive({
   curBtnItem: props.btnGroup[0]?.id,
   selectedYear: '',
-  list: []
+  list: [],
+  localQuery: {
+    title: '',
+    year: ''
+  }
 })
+// 防抖 执行最后一次
+function debounceFun(fn, wait = 500) {
+    let timer
+    return function () {
+        let context = this
+        let args = arguments
+        if (timer) clearTimeout(timer)
+        timer = setTimeout(() => {
+            fn.apply(context, args)
+        }, wait)
+    }
+}
+const d = debounceFun(getList)
+function handleInput() {
+  d({ ...props.query, title: data.title })
+}
 function clickYearBtn(item) {
   if (item || item === null) {
-    data.selectedYear = item
+    data.localQuery.year = item
     getList()
   }
   collapse.value = !collapse.value
 }
 function getList(query = props.query) {
-  http.get(props.url, { ...query, year: data.selectedYear }).then(res => {
+  http.get(props.url, { ...query, ...data.localQuery }).then(res => {
     data.list = res[props.listProp]
   })
 }
@@ -98,9 +125,15 @@ function btnItemClick(item) {
 function view(item, type) {
   let query = null
   if (type === 'richText') {
+    if (!item.content) {
+      return ElMessage({
+        showClose: true,
+        message: '暂无更多',
+        type: 'warning',
+      })
+    }
     query = route.query
     store.setRichTextContent(item.content)
-    console.log(store.richTextContent, item.content, '1324444');
   } else if (type === 'pdf') {
     query = { linkUrl: item.linkUrl, ...route.query }
   }
@@ -111,13 +144,13 @@ function view(item, type) {
     params: { type }
   })
 }
-function getRangeYear(startYear = 2022, endYear = new Date().getFullYear()) {
+function getRangeYear(startYear = 2016, endYear = new Date().getFullYear()) {
   const n = endYear - startYear
   const list = [startYear]
   for (let i = 1; i <= n; i++) {
-    list.push(startYear + i)
+    list.unshift(startYear + i)
   }
-  return list.reverse()
+  return list
 }
 
 document.addEventListener('click', () =>{
@@ -138,16 +171,21 @@ document.addEventListener('click', () =>{
     color: #333333;
   }
 }
+.year-btn-wrapper {
+  display: flex;
+  gap: 30px;
+}
+$btnHeight: 54px;
 .year-btn {
   width: 200px;
-  height: 54px;
+  height: $btnHeight;
   border-radius: 6px;
   background: #1954AB;
   color: white;
   font-size: 18px;
   padding: 0 16px 0 22px;
   box-sizing: border-box;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
   
@@ -276,4 +314,20 @@ document.addEventListener('click', () =>{
     background: #1954AB;
   }
 }
+.input-title {
+  height: $btnHeight;
+  padding: 0;
+  display: inline-block;
+  border: 1px solid #1954AB;
+  border-radius: 10px;
+  box-shadow: 2px 2px 1px #1C57AE;
+  width: 300px;
+  font-size: 18px;
+  box-sizing: border-box;
+  padding: 0 14px;
+}
+</style>
+
+<style lang="scss">
+
 </style>

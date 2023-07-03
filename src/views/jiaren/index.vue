@@ -39,12 +39,12 @@ function getList(query = data.query) {
     data.list = res.response.peopleList
   })
 }
-function viewDetail(item, type = 'richText') {
+function viewDetail(item, type = 'both') {
   store.setRichTextContent(item.content)
   router.push({
     name: 'pdf',
     params: { type },
-    query: { ...route.query }
+    query: { ...route.query, linkUrl: item.linkUrl }
   })
 }
 function handleNextPage() {

@@ -9,6 +9,8 @@
 
 </script>
 
-<style scoped>
-
+<style>
+input {
+  outline: none;
+}
 </style>

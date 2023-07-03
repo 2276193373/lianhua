@@ -3,7 +3,8 @@
     <div class="header-left">
       <template v-if="isHome">
         <img src="@/assets/img/guohui.png" alt="" class="guohui">
-        <span class="header-left-title">“嘉”人“莲”心人大代表工作互动平台</span>
+        <!-- <span class="header-left-title">“嘉”人“莲”心--嘉莲街道全过程人民民主基层实践互动平台</span> -->
+        <span class="header-left-title">{{ store.headerTitle }}</span>
       </template>
       <span v-else class="header-left-title">{{ store.headerTitle }}</span>
     </div>

@@ -1,5 +1,6 @@
 html, body {
-  margin: 0
+  margin: 0;
+
 }
 .pointer {
   cursor: pointer;
@@ -9,4 +10,8 @@ html, body {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+}
+@font-face {
+  font-family: LM;
+  src: url(@/assets/fonts/LianMengQiYiLuShuaiZhengRuiHeiTi-2.ttf);
 }

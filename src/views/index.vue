@@ -17,6 +17,7 @@
 </template>
 <script setup>
 import http from '@/request'
+import { store } from '@/store'
 
 const router = useRouter()
 
@@ -28,7 +29,7 @@ onMounted(() => {
       return item
     })
     data.content = res.content
-    store.setHeaderTitle(data.title)
+    store.setHeaderTitle(res.title)
   })
 })
 const id2RouteName = {
@@ -69,11 +70,13 @@ function handleClick(item) {
   }
 }
 .title {
-  font-size: 44px;
+  font-size: 54px;
   color: #363636;
   text-align: center;
   margin-top: 50px;
   margin-bottom: 45px;
+  color: #ed2c25;
+  font-weight: bold;
 }
 .grid {
   display: grid;
